@@ -15,7 +15,7 @@
         label="权限"
         width="300">
         <template slot-scope="scope">
-          <span v-for="role in scope.row.roles">{{role}}、</span>
+          <span v-for="role in scope.row.roles">{{role}}</br></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -34,7 +34,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="open2(scope.$index, scope.row._id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { getUsersList } from '@/api/account'
+  import { getUsersList, removeAccount } from '@/api/account'
   export default {
     data() {
       return {
@@ -54,16 +54,39 @@
       handleEdit(index, row) {
         console.log(index, row)
       },
-      handleDelete(index, row) {
-        console.log(index, row)
+      handleDelete(index, id) {
+        removeAccount(id).then(response => {
+          this.handleGetList()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+      },
+      handleGetList() {
+        this.listLoading = true
+        getUsersList().then(response => {
+          this.tableData = response.data
+          this.listLoading = false
+        })
+      },
+      open2(index, id) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleDelete(index, id)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
       }
     },
     created() {
-      this.listLoading = true
-      getUsersList().then(response => {
-        this.tableData = response.data
-        this.listLoading = false
-      })
+      this.handleGetList()
     }
   }
 </script>

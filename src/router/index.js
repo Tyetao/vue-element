@@ -53,7 +53,7 @@ export const constantRouterMap = [
       {
         path: 'addAccount',
         name: 'AddAccount',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/addAccount/index'),
         meta: { title: '新增账号', icon: 'tree' }
       }
     ]

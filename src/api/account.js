@@ -6,3 +6,11 @@ export function getUsersList() {
     method: 'get'
   })
 }
+
+export function removeAccount(id) {
+  return request({
+    url: '/removeAccount',
+    method: 'get',
+    params: { id }
+  })
+}
